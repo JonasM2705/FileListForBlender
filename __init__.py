@@ -2,7 +2,7 @@ import bpy
 import os
 
 bl_info = {
-    "name": "FilesList",
+    "name": "FilesList with Filter",
     "blender": (3, 3, 0),
     "category": "Object",
 }
@@ -39,7 +39,7 @@ class ImportFilesOperator(bpy.types.Operator):
         else:
             self.report({'WARNING'}, f"Archivo no soportado: {file_path}")
 
-# Panel principal
+# Panel principal con área de filtro
 class FilesListPanel(bpy.types.Panel):
     bl_label = "Importar Archivos"
     bl_idname = "OBJECT_PT_fileslist"
@@ -57,9 +57,15 @@ class FilesListPanel(bpy.types.Panel):
         # Botón para actualizar la lista de archivos
         layout.operator("object.update_file_list", text="Actualizar Lista")
 
-        # Mostrar los archivos disponibles para importar
+        # Filtros
+        layout.label(text="Filtros:")
+        layout.prop(scene, "filter_by_name", text="Filtrar por nombre")
+        layout.prop(scene, "filter_selected_only", text="Mostrar seleccionados")
+
+        # Mostrar los archivos filtrados
         layout.label(text="Archivos disponibles:")
-        for file_item in scene.files_list:
+        filtered_files = self.get_filtered_files(scene.files_list, scene.filter_by_name, scene.filter_selected_only)
+        for file_item in filtered_files:
             layout.prop(file_item, "selected", text=file_item.name)
 
         # Botón para importar los archivos seleccionados
@@ -72,6 +78,14 @@ class FilesListPanel(bpy.types.Panel):
 
         # Botón para abrir la escena seleccionada
         layout.operator("object.open_blend_file_operator", text="Abrir Escena .blend")
+
+    def get_filtered_files(self, files, filter_name, selected_only):
+        filtered_files = files
+        if filter_name:  # Filtrar por nombre
+            filtered_files = [file for file in filtered_files if filter_name.lower() in file.name.lower()]
+        if selected_only:  # Mostrar solo seleccionados
+            filtered_files = [file for file in filtered_files if file.selected]
+        return filtered_files
 
 # Operador para actualizar la lista de archivos
 class UpdateFileListOperator(bpy.types.Operator):
@@ -126,7 +140,6 @@ class OpenBlendFileOperator(bpy.types.Operator):
             try:
                 bpy.ops.wm.open_mainfile(filepath=blend_path)
             except RuntimeError as e:
-                # Manejo de error si la escena es de una versión posterior a la actual
                 if 'version' in str(e).lower() and 'too new' in str(e).lower():
                     self.report({'ERROR'}, f"No se puede abrir '{blend_path}': Este archivo fue guardado con una versión más reciente de Blender.")
                 else:
@@ -139,13 +152,13 @@ class OpenBlendFileOperator(bpy.types.Operator):
 class FileItem(bpy.types.PropertyGroup):
     name: bpy.props.StringProperty()
     path: bpy.props.StringProperty()
-    selected: bpy.props.BoolProperty(default=False)  # Permite seleccionar o deseleccionar el archivo
+    selected: bpy.props.BoolProperty(default=False)
 
 # Definir la clase para los archivos .blend
 class BlendFileItem(bpy.types.PropertyGroup):
     name: bpy.props.StringProperty()
     path: bpy.props.StringProperty()
-    selected: bpy.props.BoolProperty(default=False)  # Permite seleccionar o deseleccionar la escena .blend
+    selected: bpy.props.BoolProperty(default=False)
 
 # Registrar las propiedades y clases
 def register():
@@ -161,8 +174,17 @@ def register():
         description="Selecciona una carpeta con archivos soportados (.fbx, .obj, .stl)",
         subtype='DIR_PATH',
     )
-    bpy.types.Scene.files_list = bpy.props.CollectionProperty(type=FileItem)  # Lista de archivos con la propiedad 'selected'
-    bpy.types.Scene.blend_files = bpy.props.CollectionProperty(type=BlendFileItem)  # Lista de archivos .blend
+    bpy.types.Scene.files_list = bpy.props.CollectionProperty(type=FileItem)
+    bpy.types.Scene.blend_files = bpy.props.CollectionProperty(type=BlendFileItem)
+    bpy.types.Scene.filter_by_name = bpy.props.StringProperty(
+        name="Filtrar Nombre",
+        description="Filtrar archivos por nombre"
+    )
+    bpy.types.Scene.filter_selected_only = bpy.props.BoolProperty(
+        name="Mostrar Seleccionados",
+        description="Mostrar solo los archivos seleccionados",
+        default=False
+    )
 
 def unregister():
     bpy.utils.unregister_class(ImportFilesOperator)
@@ -175,6 +197,8 @@ def unregister():
     del bpy.types.Scene.fileslist_folder
     del bpy.types.Scene.files_list
     del bpy.types.Scene.blend_files
+    del bpy.types.Scene.filter_by_name
+    del bpy.types.Scene.filter_selected_only
 
 if __name__ == "__main__":
     register()
