@@ -2,9 +2,11 @@ import bpy
 import os
 
 bl_info = {
-    "name": "FilesList with Filter",
+    "name": "FilesList",
     "blender": (3, 3, 0),
     "category": "Object",
+    "author": "JonasM2705",
+    "description": "ya puedes importar varios modelos de una carpeta local."
 }
 
 # Clase para el operador de importación
