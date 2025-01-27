@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="afda15dc-e844-4e4c-9f04-06100e68edf5" name="Changes" comment="clear.py deleted, warning with scene open with later version of blender">
+    <list default="true" id="afda15dc-e844-4e4c-9f04-06100e68edf5" name="Changes" comment=".blend filter added">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/__init__.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -210,13 +209,31 @@
       <option name="project" value="LOCAL" />
       <updated>1737942275511</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="models filter added">
+      <option name="closed" value="true" />
+      <created>1737986709700</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1737986709700</updated>
+    </task>
+    <task id="LOCAL-00006" summary=".blend filter added">
+      <option name="closed" value="true" />
+      <created>1737987756161</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1737987756161</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="main" />
     <MESSAGE value="clear.py added" />
     <MESSAGE value="clear.py deleted, warning with scene open with later version of blender" />
-    <option name="LAST_COMMIT_MESSAGE" value="clear.py deleted, warning with scene open with later version of blender" />
+    <MESSAGE value="models filter added" />
+    <MESSAGE value=".blend filter added" />
+    <option name="LAST_COMMIT_MESSAGE" value=".blend filter added" />
   </component>
 </project>
